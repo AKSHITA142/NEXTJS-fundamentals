@@ -1,6 +1,7 @@
 'use client';//indicate to the client component
 //it's means now i'm using hooks or event listner
 
+import {useDebounce, useDebouncedCallback} from 'use-debounce';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useSearchParams ,useRouter,usePathname}  from 'next/navigation';
 
@@ -9,7 +10,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
   const pathname=usePathname();
   //we will use replace method from the userRouter class to update the url with the search term without refreshing the page
   const {replace} =useRouter();
-  function handleSearch(term :string){
+  const handleSearch=useDebouncedCallback((term :string)=>{
     console.log(`searching... ${term}`);
     const params=new URLSearchParams(searchParams);
     if(term){
@@ -20,7 +21,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
     }
     replace(`${pathname}?${params.toString()}`);
     console.log(term);
-  }
+  },300);
   return (
     <div className="relative flex flex-1 flex-shrink-0">
       <label htmlFor="search" className="sr-only">
